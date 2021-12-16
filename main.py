@@ -11,7 +11,7 @@ def index():
 
 @app.route('/test')
 def test():
-    summoner_name = "7423"
+    summoner_name = "Chime2"
     Summoner = LeagueApi(summoner_name)
     live_game = Summoner.live_game()
 

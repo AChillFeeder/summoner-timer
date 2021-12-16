@@ -1,5 +1,5 @@
 
-from cassiopeia import Summoner, Champions
+from cassiopeia import Summoner, Champions, Rune, SummonerSpell
 from cassiopeia.cassiopeia import set_riot_api_key
 import json
 from types import SimpleNamespace
@@ -28,19 +28,33 @@ class LeagueApi:
 
         # inGameSummonerChampion = Champions(region="NA").find(self.inGameSummoner["championId"])
 
+        response = {}
 
-        response = {
-            "summoner:": {
-                "summoner_spells": ["", ""]
+        for opponent in self.enemy_team:
+            response[opponent["summonerName"]] = {
+                "champion_name": Champions(region="NA").find(opponent["championId"]).name,
+                "champion_icon": f'https://cdn.communitydragon.org/latest/champion/{opponent["championId"]}/square',
+                "champion_vfx": f'https://cdn.communitydragon.org/latest/champion/{opponent["championId"]}/champ-select/sounds/sfx',
+                "summoner_spells": [
+                    {
+                        "name": SummonerSpell(id=opponent["spell1Id"],region="NA").name,
+                        "cooldown": SummonerSpell(id=opponent["spell1Id"],region="NA").cooldowns,
+                        # "image": SummonerSpell(id=opponent["spell1Id"],region="NA").image
+                        "image": f'http://ddragon.leagueoflegends.com/cdn/8.11.1/img/spell/{SummonerSpell(id=opponent["spell1Id"],region="NA").key}.png' 
+                    },
+                    {
+                        "name": SummonerSpell(id=opponent["spell2Id"],region="NA").name,
+                        "cooldown": SummonerSpell(id=opponent["spell2Id"],region="NA").cooldowns,
+                        # "image": SummonerSpell(id=opponent["spell2Id"],region="NA").image
+                        "image": f'http://ddragon.leagueoflegends.com/cdn/8.11.1/img/spell/{SummonerSpell(id=opponent["spell2Id"],region="NA").key}.png' 
+                    }
+                ],
+                "has_cosmic_insight": "Cosmic Insight" in [Rune(id=runeID,region="NA").name for runeID in opponent["perks"]["perkIds"]]
             }
-        }
 
-        return json.dumps(response)
+        # response = self.enemy_team
+
+        return response
         
     
-    def championId_to_data(championID):
-        response = {
-            "champion_name": "",
-            
-        }
 
