@@ -1,0 +1,49 @@
+
+*{
+    border: 0;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+img{
+    border-radius: 50%;
+}
+
+.player{
+    text-align: center;
+    border: 1px solid black;
+    margin-top: 50px;
+    /* width: 30%; */
+    /* padding: 15px; */
+    /* background: #c0e2ff; */
+}
+
+#players_data {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 50px;
+}
+#players_data img {
+    transform: scale(0.7);
+    border: 5px solid black;
+    padding: 5px;
+}
+
+.player #cooldown-modifiers, .player .summoner_spells{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+
+.player #cooldown_modifiers img{
+    transform: scale(0.5);
+}
+
+
+  
+
+  
+

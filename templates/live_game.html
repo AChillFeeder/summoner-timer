@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Live Game</title>
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/live_game.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap" rel="stylesheet"> 
+</head>
+<body>
+    <section id="players_data">
+        {% for player in data %}
+            <div class="player" id="{{ player }}">
+                <img src="{{ data[player]['champion_icon'] }}" alt="{{ data[player]['champion_name'] }}">
+                <p id="champion_name">{{ data[player]["champion_name"] }}</p>
+                <!-- <audio controls>
+                    <source src="{{ data[player]['champion_vfx'] }}" type="audio/ogg">
+                    Your browser does not support the audio element.
+                </audio>  -->
+
+                <div id="cooldown_modifiers">
+                    <!-- <input type="checkbox" 
+                    class="cooldown_modifiers" id="has_cosmic_insight" {{ "checked" if data[player]['has_cosmic_insight'] else ""}}
+                    > Has cosmic insight </input> -->
+                    <img src="{{ static_data['cosmic insight']['icon'] }}" alt="cosmic insight"
+                        style="border-color: {{ 'green' if data[player]['has_cosmic_insight'] else 'red'}};"
+                    >
+                    
+                    <!-- <input type="checkbox" class="cooldown_modifiers" id="has_lucidity_boots">Has lucidity boots</input> -->
+                    <img src="{{ static_data['lucidity boots']['icon'] }}" alt="lucidity boots">
+                </div>
+
+                <!-- <h4>Summoner spells: </h4> -->
+                <div class="summoner_spells">
+                    {% for summoner_spell in data[player]["summoner_spells"] %}
+                        <div class="summoner_spell" id="{{ summoner_spell['name'] }}">
+                            <!-- <li><p class="name">{{ summoner_spell['name'] }}</p></li> -->
+                            <img src="{{ summoner_spell['image'] }}" alt="summoner_spell['name'] }}">
+                            <p class="cooldown">{{ summoner_spell['cooldown'] }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </section>
+
+</body>
+
+<script>
+    function imageClickToggle(element){
+        element.style.color
+    }
+
+    function selectChampion(element){
+        
+    }
+</script>
+
+</html>

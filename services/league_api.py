@@ -2,11 +2,11 @@
 from cassiopeia import Summoner, Champions, Rune, SummonerSpell
 from cassiopeia.cassiopeia import set_riot_api_key
 import json
-from types import SimpleNamespace
 
 class LeagueApi:
     def __init__(self, summoner_name, region="NA") -> None:
-        set_riot_api_key("RGAPI-06cdaf93-f52b-4792-ae69-e12db5664c9c")
+        self.API_key = "RGAPI-5e7eb323-086e-4867-8dfe-c289d37b98df"
+        set_riot_api_key(self.API_key)
         
         self.summoner_name = summoner_name
         self.region = region
@@ -35,26 +35,42 @@ class LeagueApi:
                 "champion_name": Champions(region="NA").find(opponent["championId"]).name,
                 "champion_icon": f'https://cdn.communitydragon.org/latest/champion/{opponent["championId"]}/square',
                 "champion_vfx": f'https://cdn.communitydragon.org/latest/champion/{opponent["championId"]}/champ-select/sounds/sfx',
+                "has_cosmic_insight": "Cosmic Insight" in [Rune(id=runeID,region="NA").name for runeID in opponent["perks"]["perkIds"]],
                 "summoner_spells": [
                     {
                         "name": SummonerSpell(id=opponent["spell1Id"],region="NA").name,
                         "cooldown": SummonerSpell(id=opponent["spell1Id"],region="NA").cooldowns,
-                        # "image": SummonerSpell(id=opponent["spell1Id"],region="NA").image
                         "image": f'http://ddragon.leagueoflegends.com/cdn/8.11.1/img/spell/{SummonerSpell(id=opponent["spell1Id"],region="NA").key}.png' 
                     },
                     {
                         "name": SummonerSpell(id=opponent["spell2Id"],region="NA").name,
                         "cooldown": SummonerSpell(id=opponent["spell2Id"],region="NA").cooldowns,
-                        # "image": SummonerSpell(id=opponent["spell2Id"],region="NA").image
                         "image": f'http://ddragon.leagueoflegends.com/cdn/8.11.1/img/spell/{SummonerSpell(id=opponent["spell2Id"],region="NA").key}.png' 
                     }
                 ],
-                "has_cosmic_insight": "Cosmic Insight" in [Rune(id=runeID,region="NA").name for runeID in opponent["perks"]["perkIds"]]
+                
             }
 
-        # response = self.enemy_team
 
-        return response
+        # Teleport is bugged and shows a cooldown of 0, setting the correct value manually
+        # warn the user that TP scales with levels and so will show wrong values later in the game
+        for player in response:
+            for summoner_spell in response[player]["summoner_spells"]:
+                if summoner_spell["name"] == "Teleport":
+                    summoner_spell["cooldown"] = [420]
+
+        static_data = {
+            "lucidity boots": {
+                "icon": "https://raw.communitydragon.org/latest/game/assets/items/icons2d/3158_class_t2_ionianbootsoflucidity.png",
+                "haste": 12,
+            },
+            "cosmic insight": {
+                "icon": "https://raw.communitydragon.org/latest/game/assets/perks/styles/inspiration/cosmicinsight/cosmicinsight.png",
+                "haste": 18,
+            }
+        }
+
+        return response , static_data # returns a json file of static data like: Cosmic insight and lucidity boots icon
         
     
 
