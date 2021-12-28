@@ -5,7 +5,7 @@ import json
 
 class LeagueApi:
     def __init__(self, summoner_name, region="NA") -> None:
-        self.API_key = "RGAPI-5e7eb323-086e-4867-8dfe-c289d37b98df"
+        self.API_key = "RGAPI-aa1ad33a-a2d3-422d-bfdc-55539724ccb5"
         set_riot_api_key(self.API_key)
         
         self.summoner_name = summoner_name
@@ -39,12 +39,12 @@ class LeagueApi:
                 "summoner_spells": [
                     {
                         "name": SummonerSpell(id=opponent["spell1Id"],region="NA").name,
-                        "cooldown": SummonerSpell(id=opponent["spell1Id"],region="NA").cooldowns,
+                        "cooldown": SummonerSpell(id=opponent["spell1Id"],region="NA").cooldowns[0],
                         "image": f'http://ddragon.leagueoflegends.com/cdn/8.11.1/img/spell/{SummonerSpell(id=opponent["spell1Id"],region="NA").key}.png' 
                     },
                     {
                         "name": SummonerSpell(id=opponent["spell2Id"],region="NA").name,
-                        "cooldown": SummonerSpell(id=opponent["spell2Id"],region="NA").cooldowns,
+                        "cooldown": SummonerSpell(id=opponent["spell2Id"],region="NA").cooldowns[0],
                         "image": f'http://ddragon.leagueoflegends.com/cdn/8.11.1/img/spell/{SummonerSpell(id=opponent["spell2Id"],region="NA").key}.png' 
                     }
                 ],
@@ -57,7 +57,7 @@ class LeagueApi:
         for player in response:
             for summoner_spell in response[player]["summoner_spells"]:
                 if summoner_spell["name"] == "Teleport":
-                    summoner_spell["cooldown"] = [420]
+                    summoner_spell["cooldown"] = 420
 
         static_data = {
             "lucidity boots": {

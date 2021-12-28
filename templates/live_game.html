@@ -24,23 +24,24 @@
                     Your browser does not support the audio element.
                 </audio>  -->
 
+                <!-- Cooldown modifiers -->
                 <div id="cooldown_modifiers">
-                    <!-- <input type="checkbox" 
-                    class="cooldown_modifiers" id="has_cosmic_insight" {{ "checked" if data[player]['has_cosmic_insight'] else ""}}
-                    > Has cosmic insight </input> -->
+                    <!-- Cosmic insight -->
                     <img src="{{ static_data['cosmic insight']['icon'] }}" alt="cosmic insight"
                         style="border-color: {{ 'green' if data[player]['has_cosmic_insight'] else 'red'}};"
                     >
                     
-                    <!-- <input type="checkbox" class="cooldown_modifiers" id="has_lucidity_boots">Has lucidity boots</input> -->
-                    <img src="{{ static_data['lucidity boots']['icon'] }}" alt="lucidity boots">
+                    <!-- Lucidity boots -->
+                    <img src="{{ static_data['lucidity boots']['icon'] }}" alt="lucidity boots" onclick="cooldownModifierToggle(this)">
                 </div>
 
-                <!-- <h4>Summoner spells: </h4> -->
+                <!-- Summoner spells -->
                 <div class="summoner_spells">
                     {% for summoner_spell in data[player]["summoner_spells"] %}
-                        <div class="summoner_spell" id="{{ summoner_spell['name'] }}">
-                            <!-- <li><p class="name">{{ summoner_spell['name'] }}</p></li> -->
+                        <div class="summoner_spell" id="{{ summoner_spell['name'] }}" 
+                            onclick="
+                                summonerCooldownCountdown(this);
+                                ">
                             <img src="{{ summoner_spell['image'] }}" alt="summoner_spell['name'] }}">
                             <p class="cooldown">{{ summoner_spell['cooldown'] }}</p>
                         </div>
@@ -53,8 +54,27 @@
 </body>
 
 <script>
-    function imageClickToggle(element){
-        element.style.color
+    function cooldownModifierToggle(element){
+        element.style.borderColor = element.style.borderColor == "green" ? "red":"green";
+    }
+
+    function summonerCooldownCountdown(element){
+        let lucidity_boots = element.parentElement.parentElement.children[2].children[1].style.borderColor == "green" ? 1 : 0
+        let initial_cooldown = parseFloat(element.children[1].innerHTML * 100/(100 + lucidity_boots * 12)).toPrecision(5); 
+            // formula for ability Haste, no changes if no lucidity boots
+        let counter = setInterval(() =>{  
+            if (element.children[1].innerHTML > 0){
+                element.children[1].innerHTML -= 1;
+            } else {
+                clearInterval(counter);
+                element.children[1].innerHTML = initial_cooldown;
+                summonerCooldownCountdownOver(element);
+            }
+        }, 1000);
+    }
+
+    function summonerCooldownCountdownOver(element){
+        alert("countdown over!");
     }
 
     function selectChampion(element){
