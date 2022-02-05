@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.secret_key = "random key"
 
 
-def Checks(function):
+def checkSession(function):
     @wraps(function)
     def decorated_func(*args, **kwargs):
         if session.get('summoner_name'):
@@ -29,7 +29,7 @@ def index():
 
 
 @app.route('/live_game')
-@Checks
+@checkSession
 def live_game():
     Summoner = LeagueApi(session.get('summoner_name'))
     live_game, static_data = Summoner.live_game()
