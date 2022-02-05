@@ -5,7 +5,8 @@ import json
 
 class LeagueApi:
     def __init__(self, summoner_name, region="NA") -> None:
-        self.API_key = "RGAPI-5e7eb323-086e-4867-8dfe-c289d37b98df"
+        with open("services/api_key.txt", "r") as file:
+            self.API_key = file.read()
         set_riot_api_key(self.API_key)
         
         self.summoner_name = summoner_name
@@ -54,10 +55,10 @@ class LeagueApi:
 
         # Teleport is bugged and shows a cooldown of 0, setting the correct value manually
         # warn the user that TP scales with levels and so will show wrong values later in the game
-        for player in response:
-            for summoner_spell in response[player]["summoner_spells"]:
-                if summoner_spell["name"] == "Teleport":
-                    summoner_spell["cooldown"] = [420]
+        # for player in response:
+        #     for summoner_spell in response[player]["summoner_spells"]:
+        #         if summoner_spell["name"] == "Teleport":
+        #             summoner_spell["cooldown"] = [360]
 
         static_data = {
             "lucidity boots": {
